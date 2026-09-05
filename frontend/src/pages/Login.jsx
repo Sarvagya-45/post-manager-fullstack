@@ -2,10 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-axios.post(
-  "https://post-manager-fullstack-1.onrender.com/api/auth/login",
-  ...
-)
+axios.post("https://post-manager-fullstack-1.onrender.com/api/auth/login");
 
 function Login() {
   const navigate = useNavigate();
