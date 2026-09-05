@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://post-manager-fullstack-1.onrender.com/api/posts";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);

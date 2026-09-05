@@ -2,7 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-const API_URL = "http://localhost:5000";
+axios.post(
+  "https://post-manager-fullstack-1.onrender.com/api/auth/login",
+  ...
+)
 
 function Login() {
   const navigate = useNavigate();
