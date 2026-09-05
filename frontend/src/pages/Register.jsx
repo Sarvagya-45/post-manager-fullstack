@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://post-manager-fullstack-1.onrender.com";
 
 function Register() {
   const navigate = useNavigate();
@@ -36,10 +36,7 @@ function Register() {
 
       navigate("/login");
     } catch (error) {
-      setError(
-        error.response?.data?.message ||
-          "Registration failed",
-      );
+      setError(error.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -50,9 +47,7 @@ function Register() {
       <div style={styles.card}>
         <h1 style={styles.title}>Create Account</h1>
 
-        <p style={styles.subtitle}>
-          Register to manage your posts.
-        </p>
+        <p style={styles.subtitle}>Register to manage your posts.</p>
 
         {error && <div style={styles.error}>{error}</div>}
 
@@ -88,11 +83,7 @@ function Register() {
             minLength={6}
           />
 
-          <button
-            style={styles.button}
-            type="submit"
-            disabled={loading}
-          >
+          <button style={styles.button} type="submit" disabled={loading}>
             {loading ? "Creating..." : "Create Account"}
           </button>
         </form>
