@@ -4,15 +4,18 @@ function Navbar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    // Token remove karo
     localStorage.removeItem("token");
-    navigate("/login");
+
+    // Login page par redirect karo
+    navigate("/login", { replace: true });
   };
 
   return (
     <nav style={styles.nav}>
       <div style={styles.logo}>PostManager</div>
 
-      <button onClick={handleLogout} style={styles.button}>
+      <button type="button" onClick={handleLogout} style={styles.button}>
         Logout
       </button>
     </nav>

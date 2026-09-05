@@ -4,6 +4,16 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}
+
 function App() {
   const token = localStorage.getItem("token");
 
@@ -20,22 +30,23 @@ function App() {
         }
       />
 
-      <Route
-        path="/login"
-        element={token ? <Navigate to="/dashboard" replace /> : <Login />}
-      />
+      <Route path="/login" element={<Login />} />
 
-      <Route
-        path="/register"
-        element={token ? <Navigate to="/dashboard" replace /> : <Register />}
-      />
+      <Route path="/register" element={<Register />} />
 
       <Route
         path="/dashboard"
-        element={token ? <Dashboard /> : <Navigate to="/login" replace />}
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
       />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route
+        path="*"
+        element={<Navigate to={token ? "/dashboard" : "/login"} replace />}
+      />
     </Routes>
   );
 }
