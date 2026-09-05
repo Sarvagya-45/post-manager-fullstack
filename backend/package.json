@@ -1,0 +1,29 @@
+{
+  "name": "internship-project",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "server": "node server.js",
+    "client": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "axios": "^1.20.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.9.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "nodemon": "^3.1.14",
+    "vite": "^8.2.2"
+  }
+}
