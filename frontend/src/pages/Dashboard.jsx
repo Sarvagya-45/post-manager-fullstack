@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
-const API_URL = "https://post-manager-fullstack-1.onrender.com/api/posts";
+const API_URL = "https://post-manager-fullstack-1.onrender.com";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);
@@ -12,7 +12,6 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Get authentication config
   const getAuthConfig = () => {
     const token = localStorage.getItem("token");
 
@@ -23,9 +22,7 @@ function Dashboard() {
     };
   };
 
-  // =========================
   // FETCH POSTS
-  // =========================
   const fetchPosts = async () => {
     try {
       setError("");
@@ -34,6 +31,14 @@ function Dashboard() {
 
       setPosts(response.data);
     } catch (error) {
+      console.error("Fetch Posts Error:", error);
+
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+        return;
+      }
+
       setError(error.response?.data?.message || "Failed to load posts");
     }
   };
@@ -42,13 +47,12 @@ function Dashboard() {
     fetchPosts();
   }, []);
 
-  // =========================
   // CREATE / UPDATE POST
-  // =========================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!title.trim() || !content.trim()) {
+      setError("Please fill in both fields.");
       return;
     }
 
@@ -57,7 +61,6 @@ function Dashboard() {
       setError("");
 
       if (editingId) {
-        // UPDATE
         const response = await axios.put(
           `${API_URL}/api/posts/${editingId}`,
           {
@@ -75,7 +78,6 @@ function Dashboard() {
 
         setEditingId(null);
       } else {
-        // CREATE
         const response = await axios.post(
           `${API_URL}/api/posts`,
           {
@@ -91,15 +93,21 @@ function Dashboard() {
       setTitle("");
       setContent("");
     } catch (error) {
+      console.error("Save Post Error:", error);
+
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+        return;
+      }
+
       setError(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  // =========================
   // EDIT POST
-  // =========================
   const handleEdit = (post) => {
     setEditingId(post._id);
     setTitle(post.title);
@@ -111,9 +119,7 @@ function Dashboard() {
     });
   };
 
-  // =========================
   // DELETE POST
-  // =========================
   const handleDelete = async (id) => {
     try {
       setError("");
@@ -124,13 +130,19 @@ function Dashboard() {
         currentPosts.filter((post) => post._id !== id),
       );
     } catch (error) {
+      console.error("Delete Post Error:", error);
+
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+        return;
+      }
+
       setError(error.response?.data?.message || "Failed to delete post");
     }
   };
 
-  // =========================
   // CANCEL EDIT
-  // =========================
   const handleCancel = () => {
     setEditingId(null);
     setTitle("");
@@ -143,17 +155,14 @@ function Dashboard() {
       <Navbar />
 
       <main style={styles.container}>
-        {/* HEADER */}
         <div style={styles.header}>
           <h1 style={styles.heading}>Dashboard</h1>
 
           <p style={styles.subtitle}>Manage your posts from one place.</p>
         </div>
 
-        {/* ERROR */}
         {error && <div style={styles.error}>{error}</div>}
 
-        {/* FORM */}
         <section style={styles.formCard}>
           <h2 style={styles.formTitle}>
             {editingId ? "Edit Post" : "Create New Post"}
@@ -180,7 +189,10 @@ function Dashboard() {
             <div style={styles.formActions}>
               <button
                 type="submit"
-                style={styles.primaryButton}
+                style={{
+                  ...styles.primaryButton,
+                  opacity: loading ? 0.7 : 1,
+                }}
                 disabled={loading}
               >
                 {loading
@@ -203,7 +215,6 @@ function Dashboard() {
           </form>
         </section>
 
-        {/* POSTS */}
         <section style={styles.postsSection}>
           <div style={styles.postsHeader}>
             <h2 style={styles.postsTitle}>Your Posts</h2>
@@ -216,7 +227,6 @@ function Dashboard() {
           {posts.length === 0 ? (
             <div style={styles.empty}>
               <h3>No posts yet</h3>
-
               <p>Create your first post above.</p>
             </div>
           ) : (
