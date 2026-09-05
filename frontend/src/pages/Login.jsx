@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-axios.post("https://post-manager-fullstack-1.onrender.com/api/auth/login");
+const API_URL = "https://post-manager-fullstack-1.onrender.com";
 
 function Login() {
   const navigate = useNavigate();
@@ -31,11 +31,19 @@ function Login() {
     try {
       const response = await axios.post(`${API_URL}/api/auth/login`, form);
 
-      localStorage.setItem("token", response.data.token);
-
-      window.location.href = "/dashboard";
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        navigate("/dashboard");
+      } else {
+        setError("Login failed. Token not received.");
+      }
     } catch (error) {
-      setError(error.response?.data?.message || "Login failed");
+      console.error("Login Error:", error);
+
+      setError(
+        error.response?.data?.message ||
+          "Login failed. Please check your email and password.",
+      );
     } finally {
       setLoading(false);
     }
@@ -71,7 +79,14 @@ function Login() {
             required
           />
 
-          <button style={styles.button} type="submit" disabled={loading}>
+          <button
+            style={{
+              ...styles.button,
+              opacity: loading ? 0.7 : 1,
+            }}
+            type="submit"
+            disabled={loading}
+          >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
@@ -110,6 +125,7 @@ const styles = {
   title: {
     margin: "0 0 8px",
     fontSize: "30px",
+    color: "#111",
   },
 
   subtitle: {
@@ -125,6 +141,7 @@ const styles = {
     borderRadius: "9px",
     fontSize: "15px",
     boxSizing: "border-box",
+    outline: "none",
   },
 
   button: {
@@ -144,6 +161,7 @@ const styles = {
     padding: "10px",
     borderRadius: "8px",
     marginBottom: "15px",
+    fontSize: "14px",
   },
 
   bottomText: {
@@ -155,6 +173,7 @@ const styles = {
   link: {
     color: "#111",
     fontWeight: "bold",
+    textDecoration: "none",
   },
 };
 
